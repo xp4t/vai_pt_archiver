@@ -17,7 +17,7 @@ mv ./build/compiled_vck5000/vck5000_ResNet_0_int.xmodel.xmodel  ./target/vcor/vc
 mv ./build/compiled_v70/v70_ResNet_0_int.xmodel.xmodel          ./target/vcor/v70_train_resnet18_vcor.xmodel
 
 # ===========================================================================
-# STEP6: prepare archive for TARGET ZCU102 runtime application for VCoR
+# prepare archive for TARGET ZCU102 runtime application for VCoR
 # ===========================================================================
 echo " "
 echo "----------------------------------------------------------------------------------"
