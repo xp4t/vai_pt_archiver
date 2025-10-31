@@ -32,8 +32,8 @@ This script automates the **entire compilation and packaging process**, ensuring
 Clone this repository:
 
 ```bash
-git clone [Your-Repo-URL]
-cd [repository-name]
+git clone https://github.com/xp4t/vai_pt_archiver.git
+cd vai_pt_archiver
 ```
 
 Make the script executable:
