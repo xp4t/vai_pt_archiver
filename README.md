@@ -1,59 +1,57 @@
-Vitis-AI Evaluation Kit - Individual Test Archiver
+# Vitis-AI Test Suite Compiler and Archiver
 
-This repository contains a bash script to compile and package individual inference test suites for various Xilinx Evaluation Kits (e.g., ZCU104, ZCU102, etc.).
+This repository provides a **bash script** that automates the process of compiling and packaging individual inference test suites for various **Xilinx Evaluation Kits** (e.g., ZCU104, ZCU102, VCK190, etc.).
 
-The Problem
+## Problem
 
-When following the manual scripts provided in the Xilinx Vitis-AI Tutorials for PyTorch ResNet18 (from the Xilinx/Vitis-AI-Tutorials/PyTorch-ResNet18 GitHub repository), the standard process does not create a complete, successful archive.
+When following the manual scripts from the [Xilinx Vitis-AI Tutorials for PyTorch ResNet18](https://github.com/Xilinx/Vitis-AI-Tutorials/tree/3.5/Tutorials/PyTorch-ResNet18/), the default process often fails to generate a **complete and self-contained archive**. In particular:
 
-Specifically, the default scripts fail to properly package the required test images and the compiled xmodel into a single, deployable file. This makes it difficult to transfer and run the inference tests on a target board.
+* The required **test images** and **compiled `.xmodel`** files are not correctly packaged together.
+* As a result, transferring and running inference tests on a target board becomes cumbersome and error-prone.
 
-The Solution
+## Solution
 
-This script automates the entire compilation and archiving process. It correctly gathers all necessary components—including the compiled xmodel and all required test images—and packages them into separate, self-contained .tar archives, one for each specified evaluation kit.
+This script automates the **entire compilation and packaging process**, ensuring that each evaluation kit receives its own **self-contained `.tar` archive**. Each archive includes everything required to run inference immediately.
 
-This allows you to just grab the single .tar file for your specific board, copy it, and run inference immediately without missing files.
+### Key Features
 
-Features
+* **Multi-Kit Compilation:** Supports compilation for multiple Xilinx evaluation kits in one go.
+* **Automatic Archiving:** Creates `.tar` archives for each supported board.
+* **Dependency Bundling:** Includes compiled models, test scripts, and test images.
+* **Clean & Portable:** Transfer just one archive file to your board — no need to clone or copy large repositories.
 
-Multi-Kit Compilation: Runs the compilation process for multiple Xilinx evaluation kits.
+## Prerequisites
 
-Automatic Archiving: Creates a complete, self-contained .tar file for each board.
+* A **Linux host machine** with the Xilinx **Vitis-AI development environment** properly installed and sourced.
+* Necessary **source models** and **files** available for compilation.
 
-Includes All Dependencies: Each archive contains the compiled model, test scripts, and the necessary test images to run a successful inference test.
+## How to Use
 
-Clean & Portable: No need to clone entire repositories onto your evaluation kit. Just one file.
-
-Prerequisites
-
-A Linux host machine with the Xilinx Vitis-AI development environment and tools (like Vitis, Vivado, etc.) properly installed and sourced.
-
-The necessary source models and files that your script needs to compile.
-
-How to Use
-
-1. On Your Host Machine (Compilation)
+### 1. On Your Host Machine (Compilation)
 
 Clone this repository:
 
+```bash
 git clone [Your-Repo-URL]
 cd [repository-name]
-
+```
 
 Make the script executable:
 
-# (Replace with your actual script name)
-chmod +x [your_script_name.sh]
+```bash
+chmod +x compile.sh
+cp compile.sh ~/Vitis-AI/Tutorials/PyTorch-ResNet18/files/ #this should be your working directory
+```
 
+Run the script in Vitis-AI Docker Container:
 
-Run the script:
+```bash
+bash -x ./compile.sh
+```
 
-./[your_script_name.sh]
+After completion, find your archives inside the `build/` directory:
 
-
-Find Your Archives:
-Once the script finishes, you will find the .tar files inside the build/ directory.
-
+```
 build/
 ├── target_zcu104.tar
 ├── target_zcu102.tar
@@ -61,57 +59,56 @@ build/
 ├── target_vek280.tar
 ├── target_vck5000.tar
 └── target_v70.tar
+```
 
+---
 
-2. On Your Target Evaluation Kit (Inference)
+### 2. On Your Target Evaluation Kit (Inference)
 
-Identify the archive for your board (e.g., target_zcu104.tar).
+Identify and copy the archive corresponding to your board. Example for **ZCU104**:
 
-Copy the archive to your evaluation kit using scp, an SD card, or any other method.
+```bash
+scp target_zcu104.tar root@[YOUR_BOARD_IP]:~/
+```
 
-# Example using scp
-scp ./build/target_zcu104.tar root@[YOUR_BOARD_IP]:/home/root/
+Log in to your board via SSH (OPTIONAL):
 
-
-Log in to your board via SSH:
-
+```bash
 ssh root@[YOUR_BOARD_IP]
-
+```
 
 Unpack the archive:
-(The archive will contain a directory like target_zcu104)
 
+```bash
 tar -xvf target_zcu104.tar
 cd target_zcu104
+```
 
+Run the included inference test script:
 
-Run Inference!
-You can now run the included test scripts.
+```bash
+bash -x ./run_all_target.sh zcu104 #change to your board name
+```
 
-# (This command is an example, update it with your script's actual command)
-./run_inference.sh
+---
 
+## Supported Boards
 
-Supported Boards
+* **ZCU104**
+* **ZCU102**
+* **VCK190**
+* **VEK280**
+* **VCK5000**
+* **V70**
 
-This script is configured to build for the following evaluation kits:
+---
 
-ZCU104
+## 🤝 Contributing
 
-ZCU102
+Contributions are welcome! Fork this repository, make improvements, and submit a pull request.
 
-VCK190
+---
 
-VEK280
+## 📜 License
 
-VCK5000
-
-V70
-
-Contributing
-
-Feel free to fork this repository, make improvements, and submit a pull request.
-
-License
-
-(I recommend adding a license. MIT is a good, simple choice for utility scripts.)
+This project is licensed under the **MIT License** — simple and permissive for utility scripts.
